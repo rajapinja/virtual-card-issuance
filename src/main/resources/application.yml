@@ -1,0 +1,117 @@
+server:
+  port: 9791
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+spring:
+  profiles:
+    active: dev
+
+
+  application:
+    name: virtual-card-issuance
+
+#  config:
+#    activate:
+#      on-profile: dev
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8384/realms/vci-realm
+
+  main:
+    allow-bean-definition-overriding: true
+
+  kafka:
+    bootstrap-servers: host.docker.internal:29092
+    admin:
+      auto-create: true
+    topic:
+      ledger-entry-created: ledger.entry_created
+      spend-requested: txn.spend_requested
+      spend-approved: txn.spend_approved
+      spend-declined: txn.spend_declined
+      card-issued: txn.card_issued
+      merchant-created: txn.merchant_created
+
+    consumer:
+      group-id: audit-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: '*'
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/virtual_card
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    datasource:
+      hikari:
+        pool-name: HikariPool
+        register-mbeans: true
+
+  logging:
+    level:
+      org.springframework.boot.autoconfigure: DEBUG
+      org.springframework.beans.factory: DEBUG
+      org.springframework.security: DEBUG
+
+# ✅ keycloak should be here, NOT under `spring:`
+keycloak:
+  admin:
+    client-id: vci-springboot-api
+    client-secret: FI1lDNP7y573A3xtwDZ47x1MpTLwmDim
+    username: admin
+    password: admin
+    server-url: http://localhost:8384
+    realm: vci-realm
+
+audit:
+  datasource:
+    url: jdbc:postgresql://localhost:5434/audit_log
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+webclient:
+  base-url: http://localhost:8384
+
+  main:
+    banner-mode: console
+
+# mock-bank app
+#  config:
+#    activate:
+#      on-profile: mockbank
+
+#  port: 9792
+#
+#  application:
+#    name: mock-bank
+
+  # card-stock
+#  card-stock:
+#    base-url-card-stock: http://localhost:9793
+#    end-point-card-stock: /api/card-stock/next
+#    end-point-provision: /api/mock-bank/provision-card
+#    config:
+#      activate:
+#        on-profile: cardstock
+

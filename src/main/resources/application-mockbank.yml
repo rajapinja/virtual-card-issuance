@@ -1,0 +1,10 @@
+spring:
+  config:
+    activate:
+      on-profile: mockbank
+server:
+  port: 9792
+
+mock-back:
+  base-url: http://localhost:9792
+  end-point: /api/mock-bank/provision-card

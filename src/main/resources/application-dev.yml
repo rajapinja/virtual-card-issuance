@@ -1,0 +1,25 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+  default-produces-media-type: application/json
+
+encryption:
+  secret-key: abcdefghijklmnopqrstuvwxyz123456
+
+card-stock:
+  base-url-card-stock: http://localhost:9793
+  end-point-card-stock: /api/card-stock/next
+
+
+mock-back:
+  base-url: http://localhost:9792
+  end-point: /api/mock-bank/provision-card

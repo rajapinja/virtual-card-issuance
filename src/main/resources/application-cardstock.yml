@@ -1,0 +1,18 @@
+spring:
+  config:
+    activate:
+      on-profile: cardstock
+
+server:
+  port: 9793
+
+datasource:
+  url: jdbc:postgresql://localhost:5435/card_stock_db
+  username: postgres
+  password: admin
+  driver-class-name: org.postgresql.Driver
+
+card-stock:
+  base-url-card-stock: http://localhost:9793
+  end-point-card-stock: /api/card-stock/next
+  end-point-provision: /api/mock-bank/provision-card
